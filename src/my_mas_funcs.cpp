@@ -82,3 +82,95 @@ int *mult_arrays(int *data_1, size_t SIZE_X_1, size_t SIZE_Y_1,
     return ret_arr;
 }
 
+
+int det_array(int *matr, size_t SIZE, size_t SIZE_Y)
+{
+    assert(SIZE == SIZE_Y);
+    assert(matr != NULL);
+
+    int ret_det = 0;
+
+    if (SIZE == 2)
+    {
+        ret_det = matr[4] * matr[0] - matr[1] * matr[2];
+
+        return ret_det;
+    }
+
+    for (size_t i = 0; i<SIZE; i++)
+    {
+        if (1 + i % 2 == 0)
+            ret_det += matr[i] * minor_array(matr, SIZE, SIZE, 0, i);
+
+        else
+            ret_det += matr[i] * minor_array(matr, SIZE, SIZE, 0, i);
+    }
+
+    return ret_det;
+}
+
+int minor_array(int *matr, size_t SIZE, size_t SIZE_Y, size_t min_i, size_t min_j)
+{
+    assert(matr != NULL);
+    assert(SIZE == SIZE_Y);
+
+    int *minor_matrix = (int*)calloc((SIZE - 1) * (SIZE - 1), sizeof(int));
+
+    bool is_i_added = false, is_j_added = false;
+
+    for (size_t i = 0, i2 = 0; i < SIZE - 1; i++, i2++)
+    {
+        for (size_t j = 0, j2 = 0; j < SIZE - 1; j++, j2++)
+        {
+            if (i2 == min_i && !is_i_added)
+            {
+                is_i_added = true;
+                i2++;
+            }
+
+            if (j2 == min_j && !is_j_added)
+            {
+                is_j_added = true;
+                j2++;
+            }
+
+            minor_matrix[i * (SIZE - 1) + j] = matr[i2 * SIZE + j2];
+        }
+    }
+
+    int ret_val = det_array(minor_matrix, SIZE - 1, SIZE - 1);
+    free(minor_matrix);
+
+    return ret_val;
+}
+
+int alg_dop(size_t dop_i, size_t dop_j, int minor)
+{
+    if ((dop_i + dop_j) % 2 == 0)
+    {
+        return +minor;
+    }
+
+    return -minor;
+}
+
+int *obr_matrix(int *matr, size_t SIZE, size_t SIZE_Y)
+{
+    assert(SIZE == SIZE_Y);
+    assert(matr != NULL);
+
+    int *ret_matr = (int *) calloc(SIZE * SIZE, sizeof(int));
+
+    int determinant = det_array(matr, SIZE, SIZE);
+    for (size_t i = 0; i < SIZE; i++)
+    {
+        for (size_t j = 0; j < SIZE; j++)
+        {
+            int minor_ij = minor_array(matr, SIZE, SIZE, i, j);
+
+            ret_matr[j * SIZE + i] = alg_dop(i, j, minor_ij); // transponirovanie
+        }
+    }
+
+    return ret_matr;
+}

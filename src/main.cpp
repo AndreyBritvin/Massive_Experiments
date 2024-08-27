@@ -41,6 +41,7 @@ int main()
     int * arr_sum = sum_arrays(SIZE_X, SIZE_Y, (int *) pr_arr, (int *) pr_arr_2);
 
     print_array(arr_sum, SIZE_X, SIZE_Y);
+    free(arr_sum);
 
     printf("\n");
 
@@ -70,9 +71,26 @@ int main()
 
 
     print_array(arr_mult, SIZE_X_1, SIZE_Y_2);
-
-    free(arr_sum);
     free(arr_mult);
+
+    printf("\n");
+
+    int to_obr_matrix[3][3] =
+    {
+        {-1, 3, 2},
+        {9, 0, -5},
+        {4, -3, 7}
+    };
+
+    size_t SIZE_MATR = sizeof(to_obr_matrix) / sizeof(to_obr_matrix[0]);
+    size_t SIZE_MATR_Y = sizeof(to_obr_matrix[0]) / sizeof(to_obr_matrix[0][0]);
+
+    printf("%d", minor_array((int*)to_obr_matrix, 3, 3, 0, 1));
+    int *obr_arr = obr_matrix((int*) to_obr_matrix, SIZE_MATR, SIZE_MATR_Y);
+    print_array(obr_arr, SIZE_MATR - 1, SIZE_MATR - 1);
+
+
+    free(obr_arr);
 
     return EXIT_SUCCESS;
 }

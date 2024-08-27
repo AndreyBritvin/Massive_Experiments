@@ -18,4 +18,10 @@ int *sum_arrays(size_t size_x, size_t size_y, int *data_1, int *data_2);
 int *mult_arrays(int *data_1, size_t SIZE_X_1, size_t SIZE_Y_1,
                  int *data_2, size_t SIZE_X_2, size_t SIZE_Y_2);
 
+int det_array(int *matr, size_t SIZE, size_t SIZE_Y);
+int minor_array(int *matr, size_t SIZE, size_t SIZE_Y, size_t min_i, size_t min_j);
+
+int alg_dop(size_t dop_i, size_t dop_j, int minor);
+int *obr_matrix(int *matr, size_t SIZE, size_t SIZE_Y);
+
 #endif // MY_STR_FUNCS_H__
