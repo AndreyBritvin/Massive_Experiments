@@ -1,6 +1,6 @@
 <p align="center">
   <a href="" rel="noopener">
- <img width=220px height=180px src="picture/LOGO_arrays.svg" alt="Project logo"></a>
+ <img width=220px height=200px src="picture/LOGO_arrays.svg" alt="Project logo"></a>
 </p>
 
 <h3 align="center">Массивные эксперименты</h3>
