@@ -15,4 +15,7 @@ int print_tr_array(int *data, size_t total);
 
 int *sum_arrays(size_t size_x, size_t size_y, int *data_1, int *data_2);
 
+int *mult_arrays(int *data_1, size_t SIZE_X_1, size_t SIZE_Y_1,
+                 int *data_2, size_t SIZE_X_2, size_t SIZE_Y_2);
+
 #endif // MY_STR_FUNCS_H__

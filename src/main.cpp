@@ -34,7 +34,7 @@ int main()
 
     print_array((int *) pr_arr, SIZE_X, SIZE_Y);
 
-    puts("");
+    printf("\n");
 
     print_tr_array((int *) tr_arr, sizeof(tr_arr) / sizeof(int));
 
@@ -42,7 +42,37 @@ int main()
 
     print_array(arr_sum, SIZE_X, SIZE_Y);
 
+    printf("\n");
+
+    int mult_arr_1[4][2] =
+    {
+        {1, 2},
+        {3, 4},
+        {5, 6},
+        {7, 8},
+    };
+
+    int mult_arr_2[2][3] =
+    {
+        { 7,  8,  9},
+        {10, 11, 12}
+    };
+
+    size_t SIZE_X_1 = sizeof(mult_arr_1) / sizeof(mult_arr_1[0]);
+    size_t SIZE_Y_1 = sizeof(mult_arr_1[0]) / sizeof(mult_arr_1[0][0]);
+
+
+    size_t SIZE_X_2 = sizeof(mult_arr_2) / sizeof(mult_arr_2[0]);
+    size_t SIZE_Y_2 = sizeof(mult_arr_2[0]) / sizeof(mult_arr_2[0][0]);
+
+    int * arr_mult = mult_arrays((int *) mult_arr_1, SIZE_X_1, SIZE_Y_1,
+                                 (int *) mult_arr_2, SIZE_X_2, SIZE_Y_2);
+
+
+    print_array(arr_mult, SIZE_X_1, SIZE_Y_2);
+
     free(arr_sum);
+    free(arr_mult);
 
     return EXIT_SUCCESS;
 }

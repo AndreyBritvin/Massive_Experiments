@@ -57,3 +57,28 @@ int *sum_arrays(size_t size_x, size_t size_y, int *data_1, int *data_2)
 
     return ret_arr;
 }
+
+int *mult_arrays(int *data_1, size_t SIZE_X_1, size_t SIZE_Y_1,
+                 int *data_2, size_t SIZE_X_2, size_t SIZE_Y_2)
+{
+    assert(data_1 != NULL);
+    assert(data_2 != NULL);
+    assert(SIZE_X_2 == SIZE_Y_1);
+
+
+    int * ret_arr = (int *) calloc(SIZE_X_1 * SIZE_Y_2, sizeof(int));
+
+    for (size_t i = 0; i < SIZE_X_1; i++)
+    {
+        for (size_t j = 0; j < SIZE_Y_2; j++)
+        {
+            for (size_t k = 0; k < SIZE_Y_1; k++)
+            {
+                ret_arr[i * SIZE_Y_2 + j] += data_1[i * SIZE_Y_1 + k] * data_2[k * SIZE_Y_2 + j];
+            }
+        }
+    }
+
+    return ret_arr;
+}
+
