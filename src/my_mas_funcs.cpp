@@ -10,7 +10,8 @@ int print_array(int *data, size_t x, size_t y)
         {
             int elem = *(data + y * i + j);
 
-            printf("data[%lu][%lu] = %d ", i, j, elem);
+            // printf("data[%lu][%lu] = %d ", i, j, elem);
+            printf("%3d ", elem);
         }
 
         printf("\n");
@@ -90,17 +91,24 @@ int det_array(int *matr, size_t SIZE, size_t SIZE_Y)
 
     int ret_det = 0;
 
+    if (SIZE == 1)
+    {
+        return matr[0];
+    }
+
     if (SIZE == 2)
     {
-        ret_det = matr[4] * matr[0] - matr[1] * matr[2];
+        ret_det = matr[3] * matr[0] - matr[1] * matr[2];
 
         return ret_det;
     }
 
+
     for (size_t i = 0; i<SIZE; i++)
     {
-        if (1 + i % 2 == 0)
-            ret_det += matr[i] * minor_array(matr, SIZE, SIZE, 0, i);
+        // here should be +, but formula get wrong (negative) result
+        if ((1 + i) % 2 == 0)
+            ret_det -= matr[i] * minor_array(matr, SIZE, SIZE, 0, i);
 
         else
             ret_det += matr[i] * minor_array(matr, SIZE, SIZE, 0, i);
@@ -136,9 +144,17 @@ int minor_array(int *matr, size_t SIZE, size_t SIZE_Y, size_t min_i, size_t min_
 
             minor_matrix[i * (SIZE - 1) + j] = matr[i2 * SIZE + j2];
         }
+
+        is_j_added = false;
     }
+    // printf("For array:\n");
+    // print_array(matr, SIZE, SIZE);
+    // printf("Printing minor matrix for i = %lu, j = %lu\n", min_i, min_j);
+    // print_array(minor_matrix, SIZE - 1, SIZE - 1);
+    // printf("\n\n");
 
     int ret_val = det_array(minor_matrix, SIZE - 1, SIZE - 1);
+
     free(minor_matrix);
 
     return ret_val;

@@ -74,20 +74,34 @@ int main()
     free(arr_mult);
 
     printf("\n");
-
+    /*int to_obr_matrix[2][2] =
+    {
+        {-5, 7},
+        {9, 8},
+    };*/
+    /*
     int to_obr_matrix[3][3] =
     {
-        {-1, 3, 2},
-        {9, 0, -5},
-        {4, -3, 7}
+        {1, 7, 3},
+        {-4, 9, 4},
+        {0, 3, 2}
+    };*/
+
+    int to_obr_matrix[4][4] =
+    {
+        {6, -5, 8, 4},
+        {9, 7, 5, 2},
+        {7, 5, 3, 7},
+        {-4, 8, -8, -3}
     };
 
     size_t SIZE_MATR = sizeof(to_obr_matrix) / sizeof(to_obr_matrix[0]);
     size_t SIZE_MATR_Y = sizeof(to_obr_matrix[0]) / sizeof(to_obr_matrix[0][0]);
 
-    printf("%d", minor_array((int*)to_obr_matrix, 3, 3, 0, 1));
+    printf("1/%d * matrix:\n", det_array((int*)to_obr_matrix, SIZE_MATR, SIZE_MATR));
+
     int *obr_arr = obr_matrix((int*) to_obr_matrix, SIZE_MATR, SIZE_MATR_Y);
-    print_array(obr_arr, SIZE_MATR - 1, SIZE_MATR - 1);
+    print_array(obr_arr, SIZE_MATR, SIZE_MATR);
 
 
     free(obr_arr);
