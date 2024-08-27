@@ -67,7 +67,7 @@ int *mult_arrays(int *data_1, size_t SIZE_X_1, size_t SIZE_Y_1,
     assert(SIZE_X_2 == SIZE_Y_1);
 
 
-    int * ret_arr = (int *) calloc(SIZE_X_1 * SIZE_Y_2, sizeof(int));
+    int *ret_arr = (int *) calloc(SIZE_X_1 * SIZE_Y_2, sizeof(int));
 
     for (size_t i = 0; i < SIZE_X_1; i++)
     {
@@ -103,13 +103,10 @@ int det_array(int *matr, size_t SIZE, size_t SIZE_Y)
         return ret_det;
     }
 
-
     for (size_t i = 0; i<SIZE; i++)
     {
-        // here should be +, but formula get wrong (negative) result
         if ((1 + i) % 2 == 0)
             ret_det -= matr[i] * minor_array(matr, SIZE, SIZE, 0, i);
-
         else
             ret_det += matr[i] * minor_array(matr, SIZE, SIZE, 0, i);
     }
@@ -122,7 +119,7 @@ int minor_array(int *matr, size_t SIZE, size_t SIZE_Y, size_t min_i, size_t min_
     assert(matr != NULL);
     assert(SIZE == SIZE_Y);
 
-    int *minor_matrix = (int*)calloc((SIZE - 1) * (SIZE - 1), sizeof(int));
+    int *minor_matrix = (int *) calloc((SIZE - 1) * (SIZE - 1), sizeof(int));
 
     bool is_i_added = false, is_j_added = false;
 
@@ -177,7 +174,6 @@ int *obr_matrix(int *matr, size_t SIZE, size_t SIZE_Y)
 
     int *ret_matr = (int *) calloc(SIZE * SIZE, sizeof(int));
 
-    int determinant = det_array(matr, SIZE, SIZE);
     for (size_t i = 0; i < SIZE; i++)
     {
         for (size_t j = 0; j < SIZE; j++)
