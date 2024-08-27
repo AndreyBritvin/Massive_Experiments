@@ -4,11 +4,12 @@ int print_array(int *data, size_t x, size_t y)
 {
     assert(data != NULL);
 
-    for(size_t i = 0; i < x; i++)
+    for (size_t i = 0; i < x; i++)
     {
         for (size_t j = 0; j < y; j++)
         {
             int elem = *(data + y * i + j);
+
 
             // printf("data[%lu][%lu] = %d ", i, j, elem);
             printf("%3d ", elem);
@@ -43,8 +44,8 @@ int print_tr_array(int *data, size_t total)
 }
 
 
-int *sum_arrays(size_t size_x, size_t size_y, int *data_1, int *data_2)
-{
+int *sum_arrays(size_t size_x, size_t size_y, int *data_1, int *data_2) // TODO: change name to matrix
+{                                                                       // TODO: group into a structure
     int *ret_arr = (int *) calloc(size_x * size_y, sizeof(int));
 
     for (size_t i = 0; i < size_x; i++)
