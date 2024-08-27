@@ -22,8 +22,11 @@ int main()
          1, -1, 0, 1
     };
 
-    print_array((int *)pr_arr, sizeof(pr_arr)/sizeof(pr_arr[0]), sizeof(pr_arr[0])/sizeof(pr_arr[0][0]));
-    print_tr_array((int*)tr_arr, 1, 2, sizeof(tr_arr));
+    print_array((int *) pr_arr, sizeof(pr_arr) / sizeof(pr_arr[0]), sizeof(pr_arr[0]) / sizeof(pr_arr[0][0]));
+
+    puts("");
+
+    print_tr_array((int *) tr_arr, sizeof(tr_arr) / sizeof(int));
 
     return EXIT_SUCCESS;
 }
