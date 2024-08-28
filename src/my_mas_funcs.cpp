@@ -10,9 +10,34 @@ int print_array(int *data, size_t x, size_t y)
         {
             int elem = *(data + y * i + j);
 
-
-            // printf("data[%lu][%lu] = %d ", i, j, elem);
+            #ifdef FULL_PRINT_MATRIX
+            printf("data[%lu][%lu] = %d ", i, j, elem);
+            #else
             printf("%3d ", elem);
+            #endif
+        }
+
+        printf("\n");
+    }
+
+    return 0;
+}
+
+int print_array(struct matrix input_matr)
+{
+    assert(input_matr.ptr != NULL);
+
+    for (size_t i = 0; i <  input_matr.size_x; i++)
+    {
+        for (size_t j = 0; j < input_matr.size_y; j++)
+        {
+            int elem = *(input_matr.ptr + input_matr.size_y * i + j);
+
+            #ifdef FULL_PRINT_MATRIX
+            printf("data[%lu][%lu] = %d ", i, j, elem);
+            #else
+            printf("%4d ", elem);
+            #endif
         }
 
         printf("\n");
@@ -60,41 +85,56 @@ int *sum_arrays(size_t size_x, size_t size_y, int *data_1, int *data_2) // TODO:
     return ret_arr;
 }
 
-int *mult_arrays(int *data_1, size_t SIZE_X_1, size_t SIZE_Y_1,
-                 int *data_2, size_t SIZE_X_2, size_t SIZE_Y_2)
+struct matrix mult_arrays(struct matrix matr_1,
+                          struct matrix matr_2)
 {
-    assert(data_1 != NULL);
-    assert(data_2 != NULL);
-    assert(SIZE_X_2 == SIZE_Y_1);
+    assert(matr_1.ptr != NULL);
+    assert(matr_2.ptr != NULL);
+    assert(matr_2.size_x == matr_1.size_y);
 
+    struct matrix ret_matr = {.size_x = matr_1.size_x,
+                              .size_y = matr_2.size_y};
 
-    int *ret_arr = (int *) calloc(SIZE_X_1 * SIZE_Y_2, sizeof(int));
-
-    for (size_t i = 0; i < SIZE_X_1; i++)
+    if (matr_2.size_x != matr_1.size_y)
     {
-        for (size_t j = 0; j < SIZE_Y_2; j++)
+        return ret_matr;
+    }
+
+    ret_matr.ptr = (int *) calloc(matr_1.size_x * matr_2.size_y, sizeof(int));
+
+    if(ret_matr.ptr == NULL)
+    {
+        return ret_matr;
+    }
+
+    for (size_t i = 0; i < matr_1.size_x; i++)
+    {
+        for (size_t j = 0; j < matr_2.size_y; j++)
         {
-            for (size_t k = 0; k < SIZE_Y_1; k++)
+            for (size_t k = 0; k < matr_1.size_y; k++)
             {
-                ret_arr[i * SIZE_Y_2 + j] += data_1[i * SIZE_Y_1 + k] * data_2[k * SIZE_Y_2 + j];
+                ret_matr.ptr[i * matr_2.size_y + j]
+                += matr_1.ptr[i * matr_1.size_y + k] * matr_2.ptr[k * matr_2.size_y + j];
             }
         }
     }
 
-    return ret_arr;
+    return ret_matr;
 }
 
 
-int det_array(int *matr, size_t SIZE, size_t SIZE_Y)
+int det_array(struct matrix input_matrix)
 {
-    assert(SIZE == SIZE_Y);
-    assert(matr != NULL);
+    assert(input_matrix.size_x == input_matrix.size_y);
+    assert(input_matrix.ptr != NULL);
 
     int ret_det = 0;
+    int *matr = input_matrix.ptr;
+    size_t SIZE = input_matrix.size_x;
 
     if (SIZE == 1)
     {
-        return matr[0];
+        return input_matrix.ptr[0];
     }
 
     if (SIZE == 2)
@@ -107,26 +147,36 @@ int det_array(int *matr, size_t SIZE, size_t SIZE_Y)
     for (size_t i = 0; i<SIZE; i++)
     {
         if ((1 + i) % 2 == 0)
-            ret_det -= matr[i] * minor_array(matr, SIZE, SIZE, 0, i);
+            ret_det -= matr[i] * minor_array(input_matrix, 0, i);
         else
-            ret_det += matr[i] * minor_array(matr, SIZE, SIZE, 0, i);
+            ret_det += matr[i] * minor_array(input_matrix, 0, i);
     }
 
     return ret_det;
 }
 
-int minor_array(int *matr, size_t SIZE, size_t SIZE_Y, size_t min_i, size_t min_j)
+int minor_array(struct matrix input_matrix, size_t min_i, size_t min_j)
 {
-    assert(matr != NULL);
-    assert(SIZE == SIZE_Y);
+    assert(input_matrix.ptr != NULL);
+    assert(input_matrix.size_x == input_matrix.size_y);
 
-    int *minor_matrix = (int *) calloc((SIZE - 1) * (SIZE - 1), sizeof(int));
+    struct matrix minor_matrix = {};
+    minor_matrix.size_x = input_matrix.size_x - 1;
+    minor_matrix.size_y = input_matrix.size_y - 1;
+
+    minor_matrix.ptr = (int *) calloc((input_matrix.size_x - 1) * (input_matrix.size_y - 1), sizeof(int));
+
+    if (minor_matrix.ptr == NULL)
+    {
+        printf("Cant find memory to minor matrix :(");
+        return 0;
+    }
 
     bool is_i_added = false, is_j_added = false;
 
-    for (size_t i = 0, i2 = 0; i < SIZE - 1; i++, i2++)
+    for (size_t i = 0, i2 = 0; i < input_matrix.size_x - 1; i++, i2++)
     {
-        for (size_t j = 0, j2 = 0; j < SIZE - 1; j++, j2++)
+        for (size_t j = 0, j2 = 0; j < input_matrix.size_y - 1; j++, j2++)
         {
             if (i2 == min_i && !is_i_added)
             {
@@ -140,7 +190,7 @@ int minor_array(int *matr, size_t SIZE, size_t SIZE_Y, size_t min_i, size_t min_
                 j2++;
             }
 
-            minor_matrix[i * (SIZE - 1) + j] = matr[i2 * SIZE + j2];
+            minor_matrix.ptr[i * (input_matrix.size_x - 1) + j] = input_matrix.ptr[i2 * input_matrix.size_x + j2];
         }
 
         is_j_added = false;
@@ -151,9 +201,9 @@ int minor_array(int *matr, size_t SIZE, size_t SIZE_Y, size_t min_i, size_t min_
     // print_array(minor_matrix, SIZE - 1, SIZE - 1);
     // printf("\n\n");
 
-    int ret_val = det_array(minor_matrix, SIZE - 1, SIZE - 1);
+    int ret_val = det_array(minor_matrix);
 
-    free(minor_matrix);
+    free(minor_matrix.ptr);
 
     return ret_val;
 }
@@ -168,22 +218,95 @@ int alg_dop(size_t dop_i, size_t dop_j, int minor)
     return -minor;
 }
 
-int *obr_matrix(int *matr, size_t SIZE, size_t SIZE_Y)
+struct matrix obr_matrix(struct matrix input_matrix)
 {
-    assert(SIZE == SIZE_Y);
-    assert(matr != NULL);
+    assert(input_matrix.size_x == input_matrix.size_y);
+    assert(input_matrix.ptr != NULL);
 
-    int *ret_matr = (int *) calloc(SIZE * SIZE, sizeof(int));
+    struct matrix ret_matr = {.size_x = input_matrix.size_x,
+                              .size_y = input_matrix.size_y};
 
-    for (size_t i = 0; i < SIZE; i++)
+    if (input_matrix.size_x != input_matrix.size_y)
     {
-        for (size_t j = 0; j < SIZE; j++)
-        {
-            int minor_ij = minor_array(matr, SIZE, SIZE, i, j);
+        return ret_matr;
+    }
 
-            ret_matr[j * SIZE + i] = alg_dop(i, j, minor_ij); // transponirovanie
+    ret_matr.ptr = (int *) calloc(input_matrix.size_x * input_matrix.size_x, sizeof(int));
+
+    if (ret_matr.ptr == NULL)
+    {
+        printf("Cant find memory for obr matrix");
+        return ret_matr;
+    }
+
+    for (size_t i = 0; i < input_matrix.size_x; i++)
+    {
+        for (size_t j = 0; j < input_matrix.size_x; j++)
+        {
+            int minor_ij = minor_array(input_matrix, i, j);
+
+            ret_matr.ptr[j * input_matrix.size_x + i] = alg_dop(i, j, minor_ij); // transponirovanie
         }
     }
 
     return ret_matr;
 }
+
+
+struct matrix input_matrix()
+{
+    struct matrix ret_matrix = {};
+    ret_matrix.size_x = get_rows("рядов");
+    ret_matrix.size_y = get_rows("столбцов");
+
+    ret_matrix.ptr = (int *) calloc(ret_matrix.size_x * ret_matrix.size_y, sizeof(int));
+
+    if (ret_matrix.ptr == NULL)
+    {
+        return ret_matrix;
+    }
+
+    for (size_t i = 0; i < ret_matrix.size_x; i++)
+    {
+        printf("Введите %lu чисел в строку №%lu:\n", ret_matrix.size_y, i);
+
+        for (size_t j = 0; j < ret_matrix.size_y; j++)
+        {
+            scanf("%d", ret_matrix.ptr + i * ret_matrix.size_y + j);
+        }
+    }
+
+    return ret_matrix;
+}
+
+struct ptr_array input_array()
+{
+    size_t matr_size_row = get_rows("рядов");
+
+    struct ptr_array ptr_arr = {.size = matr_size_row};
+
+    for (size_t i = 0; i < matr_size_row; i++)
+    {
+        size_t matr_size_col = get_rows("Столбцов");
+
+        ptr_arr.ptr = (int *) calloc(matr_size_col, sizeof(int));
+
+        printf("Введите %lu чисел в строку №%lu:\n", matr_size_col, i);
+        for (size_t j = 0; j < matr_size_col; j++)
+        {
+            scanf("%d", &ptr_arr.ptr[j]);
+        }
+    }
+
+    return ptr_arr;
+}
+
+size_t get_rows(const char par_name[])
+{
+    printf("Введите количество %s в матрице: ", par_name);
+    size_t matr_size = 0;
+    scanf("%lu", &matr_size);
+
+    return matr_size;
+}
+

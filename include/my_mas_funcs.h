@@ -20,6 +20,19 @@
 
 #include <assert.h>
 
+struct matrix
+{
+    int *ptr;
+    size_t size_x;
+    size_t size_y;
+};
+
+struct ptr_array
+{
+    int *ptr;
+    size_t size;
+};
+
 /**
  * @brief Выводит прямоугольную матрицу на экран
  *
@@ -30,6 +43,15 @@
  * @return int 0 Если успешно
  */
 int print_array(int *data, size_t x, size_t y);
+
+/**
+ * @brief Выводит прямоугольную матрицу на экран по структуре
+ *
+ * @param[in] input_matr Матрица
+ *
+ * @return int 0 Если успешно
+ */
+int print_array(struct matrix input_matr);
 
 /**
  * @brief Выводит треугольный массив на экран ("турнирную сетку")
@@ -58,45 +80,36 @@ int *sum_arrays(size_t size_x, size_t size_y, int *data_1, int *data_2);
 /**
  * @brief Перемножение двух матриц
  *
- * @param[in] data_1   Первая матрица, которую надо перемножить
- * @param[in] SIZE_X_1 Количество рядов    в первой матрице
- * @param[in] SIZE_Y_1 Количество столбцов в первой матрице
- * @param[in] data_2   Вторая матрица, которую надо перемножить
- * @param[in] SIZE_X_2 Количество рядов    в второй матрице
- * @param[in] SIZE_X_1 Количество столбцов в второй матрице
+ * @param[in] matr_1 Первая матрица, которую надо перемножить
+ * @param[in] matr_2 Вторая матрица, которую надо перемножить
  *
- * @return int* Указатель на начало матрицы - результата перемножения входных данных
- *              Размер матрицы не возвращается, но он будет SIZE_X_1 * SIZE_Y_2
+ * @return matrix Матрицу - результата перемножения входных данных
+ *
  *
  * @warning Согласно правилам математики необходимо SIZE_Y_1 = SIZE_X_2
  * @warning Коммутативность не допускается!
  */
-int *mult_arrays(int *data_1, size_t SIZE_X_1, size_t SIZE_Y_1,
-                 int *data_2, size_t SIZE_X_2, size_t SIZE_Y_2);
-
+ struct matrix mult_arrays(struct matrix matr_1,
+                           struct matrix matr_2);
 /**
  * @brief Находит детерминант (определитель) матрицы рекурсивно через миноры
  *
- * @param[in] matr   Матрица, для которой необходимо найти определитель
- * @param[in] SIZE   Размер матрицы (по-хорошему, квадратной)
- * @param[in] SIZE_Y Количество стобцов, по-моему не используется
+ * @param[in] input_matrix Входная матрица для которой надо найти определитель
  *
  * @return int Определитель матрицы
  */
-int det_array(int *matr, size_t SIZE, size_t SIZE_Y);
+int det_array(struct matrix input_matrix);
 
 /**
  * @brief Находит минор матрицы через детерминант (определитель)
  *
- * @param[in] matr   Матрица, для которой необходимо найти минор
- * @param[in] SIZE   Размер матрицы
- * @param[in] SIZE_Y Количество стобцов, по-моему не используется, но для будущего пусть будет
+ * @param[in] input_matrix Входная матрица для минорирования
  * @param[in] min_i  Индекс строки  элемента, для которого необхоимо найти минор
  * @param[in] min_j  Индекс столбца элемента, для которого необхоимо найти минор
  *
  * @return int Значение минора
  */
-int minor_array(int *matr, size_t SIZE, size_t SIZE_Y, size_t min_i, size_t min_j);
+int minor_array(struct matrix input_matrix, size_t min_i, size_t min_j);
 
 /**
  * @brief Алгебраическое дополнение для элемента
@@ -114,12 +127,33 @@ int alg_dop(size_t dop_i, size_t dop_j, int minor);
  *        с учётом транспонирования внутри функции); TODO: Вынести транспонирование в отдельную функцию
  *
  * @param[in] matr   Матрица, для которой необходимо найти обратную
- * @param[in] SIZE   Размер матрицы
- * @param[in] SIZE_Y Количество стобцов, по-моему не используется
  *
  * @return int* Указатель на начало массива, являющегося обратной матрицей
  *              Её размер такой же, как и размер исходной
  */
-int *obr_matrix(int *matr, size_t SIZE, size_t SIZE_Y);
+struct matrix obr_matrix(struct matrix input_matrix);
+
+/**
+ * @brief Ввод прямоугольной матрицы с клаиватуры. Для ввода рваного массива см. input_array()
+ *
+ * @return int* Указатель на начало матрицы
+ */
+struct matrix input_matrix();
+
+/**
+ * @brief
+ *
+ * @return int*
+ */
+struct ptr_array input_array();
+
+/**
+ * @brief Get the rows object
+ *
+ * @param par_name
+ * @return size_t
+ */
+size_t get_rows(const char par_name[]);
+
 
 #endif // MY_ARR_FUNCS_H__

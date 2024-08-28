@@ -41,8 +41,7 @@ int main()
     int * arr_sum = sum_arrays(SIZE_X, SIZE_Y, (int *) pr_arr, (int *) pr_arr_2);
 
     print_array(arr_sum, SIZE_X, SIZE_Y);
-    free(arr_sum);
-
+    free(arr_sum); arr_sum = NULL;
     printf("\n");
 
     int mult_arr_1[4][2] =
@@ -59,19 +58,23 @@ int main()
         {10, 11, 12}
     };
 
-    size_t SIZE_X_1 = sizeof(mult_arr_1) / sizeof(mult_arr_1[0]);
-    size_t SIZE_Y_1 = sizeof(mult_arr_1[0]) / sizeof(mult_arr_1[0][0]);
+    struct matrix mult_matr_1 =
+    {
+        (int *) mult_arr_1,
+        sizeof(mult_arr_1)    / sizeof(mult_arr_1[0]),
+        sizeof(mult_arr_1[0]) / sizeof(mult_arr_1[0][0])
+    };
 
+    struct matrix mult_matr_2 =
+    {
+        (int *) mult_arr_2,
+        sizeof(mult_arr_2)    / sizeof(mult_arr_2[0]),
+        sizeof(mult_arr_2[0]) / sizeof(mult_arr_2[0][0])
+    };
 
-    size_t SIZE_X_2 = sizeof(mult_arr_2) / sizeof(mult_arr_2[0]);
-    size_t SIZE_Y_2 = sizeof(mult_arr_2[0]) / sizeof(mult_arr_2[0][0]);
-
-    int * arr_mult = mult_arrays((int *) mult_arr_1, SIZE_X_1, SIZE_Y_1,
-                                 (int *) mult_arr_2, SIZE_X_2, SIZE_Y_2);
-
-
-    print_array(arr_mult, SIZE_X_1, SIZE_Y_2);
-    free(arr_mult);
+    struct matrix mult_matr = mult_arrays(mult_matr_1, mult_matr_2);
+    print_array(mult_matr);
+    free(mult_matr.ptr); mult_matr.ptr = NULL;
 
     printf("\n");
     /*int to_obr_matrix[2][2] =
@@ -95,16 +98,22 @@ int main()
         {-4, 8, -8, -3}
     };
 
-    size_t SIZE_MATR = sizeof(to_obr_matrix) / sizeof(to_obr_matrix[0]);
-    size_t SIZE_MATR_Y = sizeof(to_obr_matrix[0]) / sizeof(to_obr_matrix[0][0]);
+    struct matrix to_obr =
+    {
+        .ptr = (int *) to_obr_matrix,
+        .size_x = sizeof(to_obr_matrix) / sizeof(to_obr_matrix[0]),
+        .size_y = sizeof(to_obr_matrix[0]) / sizeof(to_obr_matrix[0][0])
+    };
 
-    printf("1/%d * matrix:\n", det_array((int*)to_obr_matrix, SIZE_MATR, SIZE_MATR));
+    printf("1/%d * matrix:\n", det_array(to_obr));
 
-    int *obr_arr = obr_matrix((int*) to_obr_matrix, SIZE_MATR, SIZE_MATR_Y);
-    print_array(obr_arr, SIZE_MATR, SIZE_MATR);
+    struct matrix obr_arr = obr_matrix(to_obr);
+    print_array(obr_arr);
+    free(obr_arr.ptr); obr_arr.ptr = NULL;
 
-
-    free(obr_arr);
+    struct matrix input_matr = input_matrix();
+    print_array(input_matr);
+    free(input_matr.ptr); input_matr.ptr = NULL;
 
     return EXIT_SUCCESS;
 }
