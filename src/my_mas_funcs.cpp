@@ -23,6 +23,7 @@ int print_array(int *data, size_t x, size_t y)
     return 0;
 }
 
+
 int print_array(struct matrix input_matr)
 {
     assert(input_matr.ptr != NULL);
